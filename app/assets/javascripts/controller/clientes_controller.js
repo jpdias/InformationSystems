@@ -2,7 +2,7 @@ function ClientesIndex(){
 
     loadPage('../clientes/index.html');
 
-    var _url = 'http://localhost:49822/api/Clientes';
+    /*var _url = 'http://localhost:49822/api/Clientes';
 
     $.ajax({
         url: _url,
@@ -20,8 +20,7 @@ function ClientesIndex(){
                 +data[i]['Pais']+'</td><td>'
                 +data[i]['TotalDeb']+'</td></tr>');
         }
-    }); 
-    $('.page-header.clientes').append('Clientes');
+    }); */
     
 }
 function ClientesShow(cod){
