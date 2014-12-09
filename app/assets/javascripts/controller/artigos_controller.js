@@ -44,5 +44,7 @@ function ArtigosShow(cod){
                 +data['IVA']+'</td><td>'
                 +data['STKActual']+'</td></tr>'); 
     $('.page-header.artigo').append(data['Descricao']);
+
+    ArtigoArmazensShow(data['cod']);
     });
 }
