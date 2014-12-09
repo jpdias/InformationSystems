@@ -54,6 +54,8 @@ function ClientesShow(cod){
         +'</td></tr>'); 
     $('.page-header.cliente').append(data['NomeFiscal']);
     $('.data_criacao').append(data['DataCriacao']);
-
+    DocumentosIndex(data['cod']);
     });
+
+    
 }
