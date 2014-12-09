@@ -47,7 +47,7 @@ function ArmazensShow(cod){
                 +data['Fax']+'</td></tr>'); 
     $('.page-header.armazem').append(data['Descricao']);
 
-    ArtigoArmazensShow(data['cod']);
+    ArtigosArmazemShow(data['cod']);
     });
 
 
