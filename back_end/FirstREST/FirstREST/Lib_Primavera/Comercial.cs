@@ -269,7 +269,88 @@ namespace FirstREST.Lib_Primavera
 
         }
 
-        #endregion Artigo;
+        #endregion Armazem;
+
+        # region ArtigoArmazem
+
+        public static List<Model.ArtigoArmazem> GetArtigoArmazem(string armazem)
+        {
+            ErpBS objMotor = new ErpBS();
+
+            StdBELista objList;
+
+            Model.ArtigoArmazem arms = new Model.ArtigoArmazem();
+            List<Model.ArtigoArmazem> listArms = new List<Model.ArtigoArmazem>();
+
+            if (PriEngine.InitializeCompany(_credential_comercial, _credential_user, _credential_password) == true)
+            {
+
+                objList = PriEngine.Engine.Consulta("SELECT * FROM  ArtigoArmazem WHERE Armazem ='"+armazem+"'");
+
+                while (!objList.NoFim())
+                {
+                    arms = new Model.ArtigoArmazem();
+                    arms.Artigo = objList.Valor("Artigo");
+                    arms.Armazem = objList.Valor("Armazem");
+                    arms.StkActual = objList.Valor("StkActual");
+                    arms.QtReservada = objList.Valor("QtReservada");
+                    arms.UltimaContagem = objList.Valor("UltimaContagem");
+                    arms.DataUltimaContagem = objList.Valor("DataUltimaContagem");
+
+                    listArms.Add(arms);
+                    objList.Seguinte();
+                }
+
+                return listArms;
+
+            }
+            else
+            {
+                return null;
+
+            }
+        }
+
+        public static List<Model.ArtigoArmazem> ListaArtigoArmazens()
+        {
+            ErpBS objMotor = new ErpBS();
+
+            StdBELista objList;
+
+            Model.ArtigoArmazem arms = new Model.ArtigoArmazem();
+            List<Model.ArtigoArmazem> listArms = new List<Model.ArtigoArmazem>();
+
+            if (PriEngine.InitializeCompany(_credential_comercial, _credential_user, _credential_password) == true)
+            {
+
+                objList = PriEngine.Engine.Consulta("SELECT * FROM  ArtigoArmazem");
+
+                while (!objList.NoFim())
+                {
+                    arms = new Model.ArtigoArmazem();
+                    arms.Artigo = objList.Valor("Artigo");
+                    arms.Armazem = objList.Valor("Armazem");
+                    arms.StkActual = objList.Valor("StkActual");
+                    arms.QtReservada = objList.Valor("QtReservada");
+                    arms.UltimaContagem = objList.Valor("UltimaContagem");
+                    arms.DataUltimaContagem = objList.Valor("DataUltimaContagem");
+
+                    listArms.Add(arms);
+                    objList.Seguinte();
+                }
+
+                return listArms;
+
+            }
+            else
+            {
+                return null;
+
+            }
+
+        }
+
+        #endregion ArtigoArmazem;
 
         public static List<Model.FaturaPendente> ListaFaturasPendentes()
         {

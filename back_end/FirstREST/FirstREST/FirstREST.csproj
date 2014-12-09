@@ -273,6 +273,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\ArmazensController.cs" />
+    <Compile Include="Controllers\ArtigoArmazensController.cs" />
     <Compile Include="Controllers\ArtigosController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\DocCompraController.cs" />
@@ -285,6 +286,7 @@
     </Compile>
     <Compile Include="Lib_Primavera\Comercial.cs" />
     <Compile Include="Lib_Primavera\Model\Armazem.cs" />
+    <Compile Include="Lib_Primavera\Model\ArtigoArmazem.cs" />
     <Compile Include="Lib_Primavera\Model\FaturaPendente.cs" />
     <Compile Include="Lib_Primavera\Model\Artigo.cs" />
     <Compile Include="Lib_Primavera\Model\Cliente.cs" />
