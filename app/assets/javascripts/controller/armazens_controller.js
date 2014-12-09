@@ -46,5 +46,9 @@ function ArmazensShow(cod){
                 +data['Telefone']+'</td><td>'
                 +data['Fax']+'</td></tr>'); 
     $('.page-header.armazem').append(data['Descricao']);
+
+    ArtigoArmazensShow(data['cod']);
     });
+
+
 }
