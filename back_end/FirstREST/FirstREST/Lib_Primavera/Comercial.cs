@@ -352,6 +352,104 @@ namespace FirstREST.Lib_Primavera
 
         #endregion ArtigoArmazem;
 
+        # region Documento
+
+        public static List<Model.Documento> GetDocumento(string numDoc)
+        {
+            ErpBS objMotor = new ErpBS();
+
+            StdBELista objList;
+            StdBELista objListCondPag;
+
+            Model.Documento arms = new Model.Documento();
+            List<Model.Documento> listArms = new List<Model.Documento>();
+
+            if (PriEngine.InitializeCompany(_credential_comercial, _credential_user, _credential_password) == true)
+            {
+
+                objList = PriEngine.Engine.Consulta("SELECT * FROM  CabecDoc WHERE NumDoc ='" + numDoc + "'");
+
+                while (!objList.NoFim())
+                {
+                    objListCondPag = PriEngine.Engine.Consulta("SELECT * FROM  CondPag WHERE CondPag ='" + objList.Valor("CondPag") + "'");
+
+                    arms = new Model.Documento();
+                    arms.Entidade = objList.Valor("Entidade");
+                    arms.TipoDoc = objList.Valor("TipoDoc");
+                    arms.NumDoc = objList.Valor("NumDoc");
+                    arms.CondPag = objListCondPag.Valor("descricao");
+                    arms.TotalMerc = objList.Valor("TotalMerc");
+                    arms.TotalIVA = objList.Valor("TotalIVA");
+                    arms.ModoPag = objList.Valor("ModoPag");
+                    arms.DataVencimento = objList.Valor("DataVencimento");
+                    arms.LocalCarga = objList.Valor("LocalCarga");
+                    arms.HoraCarga = objList.Valor("HoraCarga");
+                    arms.LocalDescarga = objList.Valor("LocalDescarga");
+                    arms.HoraDescarga = objList.Valor("HoraDescarga");
+
+                    listArms.Add(arms);
+                    objList.Seguinte();
+                }
+
+                return listArms;
+
+            }
+            else
+            {
+                return null;
+
+            }
+        }
+
+        public static List<Model.Documento> ListaDocumentos()
+        {
+            ErpBS objMotor = new ErpBS();
+
+            StdBELista objList;
+            StdBELista objListCondPag;
+
+            Model.Documento arms = new Model.Documento();
+            List<Model.Documento> listArms = new List<Model.Documento>();
+
+            if (PriEngine.InitializeCompany(_credential_comercial, _credential_user, _credential_password) == true)
+            {
+
+                objList = PriEngine.Engine.Consulta("SELECT * FROM  CabecDoc");
+
+                while (!objList.NoFim())
+                {
+                    objListCondPag = PriEngine.Engine.Consulta("SELECT * FROM  CondPag WHERE CondPag ='" + objList.Valor("CondPag") + "'");
+
+                    arms = new Model.Documento();
+                    arms.Entidade = objList.Valor("Entidade");
+                    arms.TipoDoc = objList.Valor("TipoDoc");
+                    arms.NumDoc = objList.Valor("NumDoc");
+                    arms.CondPag = objListCondPag.Valor("descricao");
+                    arms.TotalMerc = objList.Valor("TotalMerc");
+                    arms.TotalIVA = objList.Valor("TotalIVA");
+                    arms.ModoPag = objList.Valor("ModoPag");
+                    arms.DataVencimento = objList.Valor("DataVencimento");
+                    arms.LocalCarga = objList.Valor("LocalCarga");
+                    arms.HoraCarga = objList.Valor("HoraCarga");
+                    arms.LocalDescarga = objList.Valor("LocalDescarga");
+                    arms.HoraDescarga = objList.Valor("HoraDescarga");
+
+                    listArms.Add(arms);
+                    objList.Seguinte();
+                }
+
+                return listArms;
+
+            }
+            else
+            {
+                return null;
+
+            }
+        }
+
+        #endregion Documento;
+
         public static List<Model.FaturaPendente> ListaFaturasPendentes()
         {
             ErpBS objMotor = new ErpBS();

@@ -277,6 +277,7 @@
     <Compile Include="Controllers\ArtigosController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\DocCompraController.cs" />
+    <Compile Include="Controllers\DocumentosController.cs" />
     <Compile Include="Controllers\DocVendaController.cs" />
     <Compile Include="Controllers\FaturaPendenteController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -287,6 +288,7 @@
     <Compile Include="Lib_Primavera\Comercial.cs" />
     <Compile Include="Lib_Primavera\Model\Armazem.cs" />
     <Compile Include="Lib_Primavera\Model\ArtigoArmazem.cs" />
+    <Compile Include="Lib_Primavera\Model\Documento.cs" />
     <Compile Include="Lib_Primavera\Model\FaturaPendente.cs" />
     <Compile Include="Lib_Primavera\Model\Artigo.cs" />
     <Compile Include="Lib_Primavera\Model\Cliente.cs" />
