@@ -450,6 +450,119 @@ namespace FirstREST.Lib_Primavera
 
         #endregion Documento;
 
+        # region AnaliseDebito
+
+        public static Model.AnaliseDebito GetAnaliseDebito(string numDoc)
+        {
+            
+            {
+                return null;
+
+            }
+        }
+
+        public static Model.AnaliseDebito ListaAnaliseDebito()
+        {
+            StdBELista objList;
+
+            //fatura
+            Model.FaturaPendente pendente = new Model.FaturaPendente();
+            //analise debito
+            Model.AnaliseDebito analiseDebito = new Model.AnaliseDebito();
+            analiseDebito.pendentes = new List<Model.PendentesAnuais>();
+
+            //conjunto de trimestres
+            Model.PendentesAnuais listPendentesAnual = new Model.PendentesAnuais();
+
+            //conjunto de 3 meses
+            Model.PendentesTrimestrais listPendentesTrimestral = new Model.PendentesTrimestrais();
+
+            int debitoClientes, debitoFornecedores,debitoClientesAcumulado, debitoFornecedoresAcumulado;
+
+            if (PriEngine.InitializeCompany(_credential_comercial, _credential_user, _credential_password) == true)
+            {
+                for (int ano = 0; ano < 8; ano++)
+                {
+                    debitoClientesAcumulado = 0;
+                    debitoFornecedoresAcumulado = 0;
+
+                    listPendentesAnual.trimestres = new List<Model.PendentesTrimestrais>();
+                    for (int trimestre = 1; trimestre < 12; trimestre+=3)
+                    {
+                        /***Re-inicializar variaveis***/
+                        debitoClientes = 0;
+                        debitoFornecedores = 0;
+
+                        listPendentesTrimestral = new Model.PendentesTrimestrais();
+                        listPendentesTrimestral.pendentesClientes = new List<Model.FaturaPendente>();
+                        listPendentesTrimestral.pendentesFornecedores = new List<Model.FaturaPendente>();
+
+                        //////////////////////////////////////////////////////////////////////////////////
+
+
+
+                        //for clientes
+                        objList = PriEngine.Engine.Consulta("SELECT DataVencimento, Totalmerc, TotalIVA FROM CabecDoc WHERE DataVencimento >= '" + (2010 + ano) + "-" + trimestre + "-1' AND DataVencimento <= '" + (2010 + ano) + "-" + (trimestre + 2) + "-30' ORDER BY DataVencimento");
+
+                        while (!objList.NoFim())
+                        {
+
+                            pendente = new Model.FaturaPendente();
+                            pendente.DataVencimento = objList.Valor("DataVencimento");
+                            pendente.TotalMerc = objList.Valor("TotalMerc");
+                            pendente.TotalMerc = objList.Valor("TotalIVA");
+
+                            debitoClientesAcumulado += objList.Valor("TotalMerc") + objList.Valor("TotalIVA");
+                            debitoClientes += objList.Valor("TotalMerc") + objList.Valor("TotalIVA");
+
+                            listPendentesTrimestral.pendentesClientes.Add(pendente);
+                            objList.Seguinte();
+                        }
+
+                        listPendentesTrimestral.DebitoClientesAcumulado = debitoClientesAcumulado;
+                        listPendentesTrimestral.DebitoClientes = debitoClientes;
+
+                        //for fornecedores
+                        objList = PriEngine.Engine.Consulta("SELECT DataVencimento, Totalmerc, TotalIVA FROM CabecCompras WHERE DataVencimento >= '" + (2010 + ano) + "-" + trimestre + "-1' AND DataVencimento <= '" + (2010 + ano) + "-" + (trimestre + 2) + "-30' AND TipoDoc = 'VFA' ORDER BY DataVencimento");
+
+                        while (!objList.NoFim())
+                        {
+
+                            pendente = new Model.FaturaPendente();
+                            pendente.DataVencimento = objList.Valor("DataVencimento");
+                            pendente.TotalMerc = objList.Valor("TotalMerc");
+                            pendente.TotalMerc = objList.Valor("TotalIVA");
+
+                            debitoFornecedoresAcumulado += objList.Valor("TotalMerc") + objList.Valor("TotalIVA");
+                            debitoFornecedores += objList.Valor("TotalMerc") + objList.Valor("TotalIVA");
+
+                            listPendentesTrimestral.pendentesFornecedores.Add(pendente);
+                            objList.Seguinte();
+                        }
+
+                        listPendentesTrimestral.DebitoFornecedoresAcumulado = debitoFornecedoresAcumulado;
+                        listPendentesTrimestral.DebitoFornecedores = debitoFornecedores;
+
+                        listPendentesAnual.trimestres.Add(listPendentesTrimestral);
+                    }
+
+                    listPendentesAnual.Ano = (2010 + ano);
+                    listPendentesAnual.DebitoClientes = debitoClientesAcumulado;
+                    listPendentesAnual.DebitoFornecedores = debitoFornecedoresAcumulado;
+                    analiseDebito.pendentes.Add(listPendentesAnual);
+                    listPendentesAnual = new Model.PendentesAnuais();
+                }
+
+
+                return analiseDebito;
+
+            }
+            else
+            return null;
+        }
+
+        #endregion AnaliseDebito;
+
         public static List<Model.FaturaPendente> ListaFaturasPendentes()
         {
             ErpBS objMotor = new ErpBS();
