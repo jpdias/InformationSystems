@@ -30,25 +30,23 @@ function pendentesAnuais(data){
         { y: data['pendentes'][1]['Ano'], f: data['pendentes'][1]['DebitoFornecedores']*-1, c: data['pendentes'][1]['DebitoClientes'] },
         { y: data['pendentes'][2]['Ano'], f: data['pendentes'][2]['DebitoFornecedores']*-1, c: data['pendentes'][2]['DebitoClientes'] },
         { y: data['pendentes'][3]['Ano'], f: data['pendentes'][3]['DebitoFornecedores']*-1, c: data['pendentes'][3]['DebitoClientes'] },
-        { y: data['pendentes'][4]['Ano'], f: data['pendentes'][4]['DebitoFornecedores']*-1, c: data['pendentes'][4]['DebitoClientes'] },
-        { y: data['pendentes'][5]['Ano'], f: data['pendentes'][5]['DebitoFornecedores']*-1, c: data['pendentes'][5]['DebitoClientes'] },
-        { y: data['pendentes'][6]['Ano'], f: data['pendentes'][6]['DebitoFornecedores']*-1, c: data['pendentes'][6]['DebitoClientes'] },
-        { y: data['pendentes'][7]['Ano'], f: data['pendentes'][7]['DebitoFornecedores']*-1, c: data['pendentes'][7]['DebitoClientes'] }
+        { y: data['pendentes'][4]['Ano'], f: data['pendentes'][4]['DebitoFornecedores']*-1, c: data['pendentes'][4]['DebitoClientes'] }
         ],
         xkey: 'y',
         ykeys: ['f', 'c'],
         labels: ['Fornecedores', 'Clientes']
     });
 
-    function showTrimestres(){
-            pendentesTrimestrais($(this).text(),data,{debitoAcumulado:false});
-    }
-    $('tspan').on('click',showTrimestres);
+function showTrimestres(){
+    pendentesTrimestrais($(this).text(),data,{debitoAcumulado:false});
+}
+$('tspan').on('click',showTrimestres);
 }
 
 function pendentesTrimestrais(ano, data, options){
 
     $('#graph').empty();
+    $('#pencent-divida').empty();
     $('#graph_title').empty();
     $('table#pendentes tbody').empty();
     $('#graph_title').append('<button style="background: transparent;border: none;font-size: 12px;color:#428bca;"></button>');
@@ -70,15 +68,27 @@ function pendentesTrimestrais(ano, data, options){
 
     function changeAculativeMode(){
        pendentesTrimestrais(ano, data, {debitoAcumulado:acumulativeMode['bool']});
+   }
+
+   $('#graph_title button').on('click', changeAculativeMode);
+
+   for(var i=0; i < data['pendentes'].length; i++)
+    if(data['pendentes'][i]['Ano'] == ano){
+        pendentes = data['pendentes'][i];
     }
 
-    $('#graph_title button').on('click', changeAculativeMode);
+   var debitosPendentes = {clientes:0, fornecedores:0};
+
+for(var a=0; a < pendentes['trimestres'].length; a++)
+   for(var i = 0; i < pendentes['trimestres'][a]['pendentesMensais'].length; i++){
+    for(var j = 0; j < pendentes['trimestres'][a]['pendentesMensais'][i]['pendentesClientes'].length; j++)
+        debitosPendentes['clientes'] += (pendentes['trimestres'][a]['pendentesMensais'][i]['pendentesClientes'][j]['TotalMerc']+pendentes['trimestres'][a]['pendentesMensais'][i]['pendentesClientes'][j]['TotalIVA']);
+
+    for(var j = 0; j < pendentes['trimestres'][a]['pendentesMensais'][i]['pendentesFornecedores'].length;j++)
+        debitosPendentes['fornecedores'] += (pendentes['trimestres'][a]['pendentesMensais'][i]['pendentesFornecedores'][j]['TotalMerc']+pendentes['trimestres'][a]['pendentesMensais'][i]['pendentesFornecedores'][j]['TotalIVA']);
+}
 
 
-    for(var i=0; i < data['pendentes'].length; i++)
-        if(data['pendentes'][i]['Ano'] == ano){
-            pendentes = data['pendentes'][i];
-        }
     // Use Morris.Bar
     Morris.Bar({
         element: 'graph',
@@ -93,80 +103,93 @@ function pendentesTrimestrais(ano, data, options){
         labels: ['Fornecedores', 'Clientes']
     });
 
+    Morris.Donut({
+        element: 'pencent-divida',
+        data: [
+        {label: 'Fornecedores\n(a Pagar)', value: (debitosPendentes['fornecedores']*-1)/(debitosPendentes['clientes']+debitosPendentes['fornecedores']*-1)},
+        {label: 'Clientes\n(a Receber)', value: debitosPendentes['clientes']/(debitosPendentes['clientes']+(debitosPendentes['fornecedores'])*-1) }
+        ],
+        formatter: function (y) { 
+            return (y*100).toFixed(2)+'%';
+        },
+        resize: true
+    });
+
     function showMeses(){
         var trimestreNum = 0;
         if($(this).text() == '1º Trimestre')
             trimestreNum = 0;
         else
-        if($(this).text() == '2º Trimestre')
-            trimestreNum = 1;
-        else
-        if($(this).text() == '3º Trimestre')
-            trimestreNum = 2;
-        else
-        if($(this).text() == '4º Trimestre')
-            trimestreNum = 3;
-
-        pendentesMensais(ano,trimestreNum,data,{debitoAcumulado:false});
-        return;
-    }
-
-    function displayTable(){
-        var bar_id = $(this).index()-16;
-        var options = {trimestre:'',tipo:'', entidadeLink:''};
-
-        $('table#pendentes thead').empty();
-        $('table#pendentes tbody').empty();
-
-        if(bar_id < 2)
-            options['trimestre'] = 0;
-        else
-            if(bar_id < 4)
-                options['trimestre'] = 1;
+            if($(this).text() == '2º Trimestre')
+                trimestreNum = 1;
             else
-                if(bar_id < 6)
-                    options['trimestre'] = 2;
+                if($(this).text() == '3º Trimestre')
+                    trimestreNum = 2;
                 else
-                    if(bar_id < 8)
-                        options['trimestre'] = 3;
+                    if($(this).text() == '4º Trimestre')
+                        trimestreNum = 3;
 
-        if(bar_id%2 == 1){
-            options['tipo'] = 'pendentesClientes';
-            options['entidadeLink'] = 'ClientesShow';
-        }
-        else
-            options['tipo'] = 'pendentesFornecedores';
+                    pendentesMensais(ano,trimestreNum,data,{debitoAcumulado:false});
+                    return;
+                }
 
-        var listaPendentesMensais = pendentes['trimestres'][options['trimestre']]['pendentesMensais'];
+                function displayTable(){
+                    var bar_id = $(this).index()-16;
+                    var options = {trimestre:'',tipo:'', entidadeLink:''};
 
-        $('table#pendentes thead').append('<tr><th rowspan="2">Tipo Documento</th><th rowspan="2">Entidade</th><th colspan="2">Carga</th><th colspan="2">Descarga</th><th colspan="2">Pagamento</th><th rowspan="2">Data Vencimento</th><th colspan="3">Total</th></tr><tr><th>Local</th><th>Hora</th><th>Local</th><th>Hora</th><th>Condição</th><th>Modo</th><th>IVA</th><th>Mercadoria</th><th>Final</th></tr>');
-        for(var itr_mes = 0; itr_mes < listaPendentesMensais.length; itr_mes++){
-            var pendentes_mes = listaPendentesMensais[itr_mes][options['tipo']];
-            for(var i = 0; i < pendentes_mes.length; i++){
-                $('table#pendentes tbody').append('<tr><td>'+pendentes_mes[i]['TipoDoc']+'</td><td><a onclick="'+options['entidadeLink']+'(\''+pendentes_mes[i]["Entidade"]+'\')" style="cursor: pointer;">'
-                    +pendentes_mes[i]['Entidade']+'</a></td><td>'
-                    +pendentes_mes[i]['LocalCarga']+'</td><td style="text-align: center;">'
-                    +pendentes_mes[i]['HoraCarga']+'</td><td>'
-                    +pendentes_mes[i]['LocalDescarga']+'</td><td style="text-align: center;">'
-                    +pendentes_mes[i]['HoraDescarga']+'</td><td>'
-                    +pendentes_mes[i]['CondPag']+'</td><td>'
-                    +pendentes_mes[i]['ModoPag']+'</td><td style="text-align: center;">'
-                    +/\d{4}-\d{2}-\d{2}/.exec(pendentes_mes[i]['DataVencimento'])+'</td><td style="text-align:right;">'
-                    +pendentes_mes[i]['TotalIVA']+' €</td><td style="text-align:right;">'
-                    +pendentes_mes[i]['TotalMerc']+' €</td><td style="text-align:right;font-weight: bold;">'
-                    +(pendentes_mes[i]['TotalMerc']+pendentes_mes[i]['TotalIVA'])+' €</td></tr>');
-            }
-        }
-    }
+                    $('table#pendentes thead').empty();
+                    $('table#pendentes tbody').empty();
 
-    $('rect').on('click',displayTable);
-    $('tspan').on('click',showMeses);
-    $('rect').css('cursor','pointer');
+                    if(bar_id < 2)
+                        options['trimestre'] = 0;
+                    else
+                        if(bar_id < 4)
+                            options['trimestre'] = 1;
+                        else
+                            if(bar_id < 6)
+                                options['trimestre'] = 2;
+                            else
+                                if(bar_id < 8)
+                                    options['trimestre'] = 3;
+
+                                if(bar_id%2 == 1){
+                                    options['tipo'] = 'pendentesClientes';
+                                    options['entidadeLink'] = 'ClientesShow';
+                                }
+                                else
+                                    options['tipo'] = 'pendentesFornecedores';
+
+                                var listaPendentesMensais = pendentes['trimestres'][options['trimestre']]['pendentesMensais'];
+
+                                $('table#pendentes thead').append('<tr><th rowspan="2">Tipo Documento</th><th rowspan="2">Entidade</th><th colspan="2">Carga</th><th colspan="2">Descarga</th><th colspan="2">Pagamento</th><th rowspan="2">Data Vencimento</th><th colspan="3">Total</th></tr><tr><th>Local</th><th>Hora</th><th>Local</th><th>Hora</th><th>Condição</th><th>Modo</th><th>IVA</th><th>Mercadoria</th><th>Final</th></tr>');
+                                for(var itr_mes = 0; itr_mes < listaPendentesMensais.length; itr_mes++){
+                                    var pendentes_mes = listaPendentesMensais[itr_mes][options['tipo']];
+                                    for(var i = 0; i < pendentes_mes.length; i++){
+                                        $('table#pendentes tbody').append('<tr><td>'+pendentes_mes[i]['TipoDoc']+'</td><td><a onclick="'+options['entidadeLink']+'(\''+pendentes_mes[i]["Entidade"]+'\')" style="cursor: pointer;">'
+                                            +pendentes_mes[i]['Entidade']+'</a></td><td>'
+                                            +pendentes_mes[i]['LocalCarga']+'</td><td style="text-align: center;">'
+                                            +pendentes_mes[i]['HoraCarga']+'</td><td>'
+                                            +pendentes_mes[i]['LocalDescarga']+'</td><td style="text-align: center;">'
+                                            +pendentes_mes[i]['HoraDescarga']+'</td><td>'
+                                            +pendentes_mes[i]['CondPag']+'</td><td>'
+                                            +pendentes_mes[i]['ModoPag']+'</td><td style="text-align: center;">'
+                                            +/\d{4}-\d{2}-\d{2}/.exec(pendentes_mes[i]['DataVencimento'])+'</td><td style="text-align:right;">'
+                                            +pendentes_mes[i]['TotalIVA']+' €</td><td style="text-align:right;">'
+                                            +pendentes_mes[i]['TotalMerc']+' €</td><td style="text-align:right;font-weight: bold;">'
+                                            +(pendentes_mes[i]['TotalMerc']+pendentes_mes[i]['TotalIVA'])+' €</td></tr>');
+}
+}
+}
+
+$('rect').on('click',displayTable);
+$('tspan').on('click',showMeses);
+$('rect').css('cursor','pointer');
 }
 
 function pendentesMensais(ano, trimestre, data, options){
 
     $('#graph').empty();
+    $('#pencent-divida').empty();
     $('#graph_title').empty();
     $('table#pendentes tbody').empty();
     $('#graph_title').append('<button style="background: transparent;border: none;font-size: 12px;color:#428bca;"></button>');
@@ -188,15 +211,25 @@ function pendentesMensais(ano, trimestre, data, options){
 
     function changeAculativeMode(){
        pendentesMensais(ano, trimestre, data, {debitoAcumulado:acumulativeMode['bool']});
+   }
+
+   $('#graph_title button').on('click', changeAculativeMode);
+
+
+   for(var i=0; i < data['pendentes'].length; i++)
+    if(data['pendentes'][i]['Ano'] == ano){
+        pendentes = data['pendentes'][i]['trimestres'][trimestre];
     }
 
-    $('#graph_title button').on('click', changeAculativeMode);
+    var debitosPendentes = {clientes:0, fornecedores:0};
 
+    for(var i = 0; i < pendentes['pendentesMensais'].length; i++){
+        for(var j = 0; j < pendentes['pendentesMensais'][i]['pendentesClientes'].length; j++)
+            debitosPendentes['clientes'] += (pendentes['pendentesMensais'][i]['pendentesClientes'][j]['TotalMerc']+pendentes['pendentesMensais'][i]['pendentesClientes'][j]['TotalIVA']);
 
-    for(var i=0; i < data['pendentes'].length; i++)
-        if(data['pendentes'][i]['Ano'] == ano){
-            pendentes = data['pendentes'][i]['trimestres'][trimestre];
-        }
+        for(var j = 0; j < pendentes['pendentesMensais'][i]['pendentesFornecedores'].length;j++)
+            debitosPendentes['fornecedores'] += (pendentes['pendentesMensais'][i]['pendentesFornecedores'][j]['TotalMerc']+pendentes['pendentesMensais'][i]['pendentesFornecedores'][j]['TotalIVA']);
+    }
 
     console.log(pendentes['pendentesMensais'][2]['DebitoFornecedores'+acumulativeMode['append']]*-1);
 
@@ -211,6 +244,18 @@ function pendentesMensais(ano, trimestre, data, options){
         xkey: 'y',
         ykeys: ['f', 'c'],
         labels: ['Fornecedores', 'Clientes']
+    });
+
+    Morris.Donut({
+        element: 'pencent-divida',
+        data: [
+        {label: 'Fornecedores\n(a Pagar)', value: (debitosPendentes['fornecedores']*-1)/(debitosPendentes['clientes']+debitosPendentes['fornecedores']*-1)},
+        {label: 'Clientes\n(a Receber)', value: debitosPendentes['clientes']/(debitosPendentes['clientes']+(debitosPendentes['fornecedores'])*-1) }
+        ],
+        formatter: function (y) { 
+            return (y*100).toFixed(2)+'%';
+        },
+        resize: true
     });
 
     function displayTable(){
@@ -230,36 +275,36 @@ function pendentesMensais(ano, trimestre, data, options){
                 if(bar_id < 6)
                     options['mes'] = 2;
 
-        if(bar_id%2 == 1){
-            options['tipo'] = 'pendentesClientes';
-            options['entidadeLink'] = 'ClientesShow';
-        }
-        else
-            options['tipo'] = 'pendentesFornecedores';
+                if(bar_id%2 == 1){
+                    options['tipo'] = 'pendentesClientes';
+                    options['entidadeLink'] = 'ClientesShow';
+                }
+                else
+                    options['tipo'] = 'pendentesFornecedores';
 
-        var listaPendentes = pendentes['pendentesMensais'][options['mes']][options['tipo']];
+                var listaPendentes = pendentes['pendentesMensais'][options['mes']][options['tipo']];
 
-        $('table#pendentes thead').append('<tr><th rowspan="2">Tipo Documento</th><th rowspan="2">Entidade</th><th colspan="2">Carga</th><th colspan="2">Descarga</th><th colspan="2">Pagamento</th><th rowspan="2">Data Vencimento</th><th colspan="3">Total</th></tr><tr><th>Local</th><th>Hora</th><th>Local</th><th>Hora</th><th>Condição</th><th>Modo</th><th>IVA</th><th>Mercadoria</th><th>Final</th></tr>');
+                $('table#pendentes thead').append('<tr><th rowspan="2">Tipo Documento</th><th rowspan="2">Entidade</th><th colspan="2">Carga</th><th colspan="2">Descarga</th><th colspan="2">Pagamento</th><th rowspan="2">Data Vencimento</th><th colspan="3">Total</th></tr><tr><th>Local</th><th>Hora</th><th>Local</th><th>Hora</th><th>Condição</th><th>Modo</th><th>IVA</th><th>Mercadoria</th><th>Final</th></tr>');
 
-            for(var i = 0; i < listaPendentes.length; i++){
-                $('table#pendentes tbody').append('<tr><td>'+listaPendentes[i]['TipoDoc']+'</td><td><a onclick="'+options['entidadeLink']+'(\''+listaPendentes[i]["Entidade"]+'\')" style="cursor: pointer;">'
-                    +listaPendentes[i]['Entidade']+'</a></td><td>'
-                    +listaPendentes[i]['LocalCarga']+'</td><td style="text-align: center;">'
-                    +listaPendentes[i]['HoraCarga']+'</td><td>'
-                    +listaPendentes[i]['LocalDescarga']+'</td><td style="text-align: center;">'
-                    +listaPendentes[i]['HoraDescarga']+'</td><td>'
-                    +listaPendentes[i]['CondPag']+'</td><td>'
-                    +listaPendentes[i]['ModoPag']+'</td><td style="text-align: center;">'
-                    +/\d{4}-\d{2}-\d{2}/.exec(listaPendentes[i]['DataVencimento'])+'</td><td style="text-align:right;">'
-                    +listaPendentes[i]['TotalIVA']+' €</td><td style="text-align:right;">'
-                    +listaPendentes[i]['TotalMerc']+' €</td><td style="text-align:right;font-weight: bold;">'
-                    +(listaPendentes[i]['TotalMerc']+listaPendentes[i]['TotalIVA'])+' €</td></tr>');
-            }
-    }
-    function backToAno(){
-        pendentesTrimestrais(ano,data,options);
-    }
-    $('rect').on('click',displayTable);
-    $('#return').on('click', backToAno);
-    $('rect').css('cursor','pointer');
+                for(var i = 0; i < listaPendentes.length; i++){
+                    $('table#pendentes tbody').append('<tr><td>'+listaPendentes[i]['TipoDoc']+'</td><td><a onclick="'+options['entidadeLink']+'(\''+listaPendentes[i]["Entidade"]+'\')" style="cursor: pointer;">'
+                        +listaPendentes[i]['Entidade']+'</a></td><td>'
+                        +listaPendentes[i]['LocalCarga']+'</td><td style="text-align: center;">'
+                        +listaPendentes[i]['HoraCarga']+'</td><td>'
+                        +listaPendentes[i]['LocalDescarga']+'</td><td style="text-align: center;">'
+                        +listaPendentes[i]['HoraDescarga']+'</td><td>'
+                        +listaPendentes[i]['CondPag']+'</td><td>'
+                        +listaPendentes[i]['ModoPag']+'</td><td style="text-align: center;">'
+                        +/\d{4}-\d{2}-\d{2}/.exec(listaPendentes[i]['DataVencimento'])+'</td><td style="text-align:right;">'
+                        +listaPendentes[i]['TotalIVA']+' €</td><td style="text-align:right;">'
+                        +listaPendentes[i]['TotalMerc']+' €</td><td style="text-align:right;font-weight: bold;">'
+                        +(listaPendentes[i]['TotalMerc']+listaPendentes[i]['TotalIVA'])+' €</td></tr>');
+}
+}
+function backToAno(){
+    pendentesTrimestrais(ano,data,options);
+}
+$('rect').on('click',displayTable);
+$('#return').on('click', backToAno);
+$('rect').css('cursor','pointer');
 }
