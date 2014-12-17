@@ -11,8 +11,8 @@ function DocumentosIndex(cliente){
         contentType: "application/json;charset=UTF-8"
 
     }).done(function(data){ 
-        $('table#documentos thead').append('<tr><th rowspan="2">Tipo Decomento</th><th colspan="2">Carga</th><th colspan="2">Descarga</th><th colspan="2">Pagamento</th><th rowspan="2">Data Vencimento</th><th colspan="2">Total</th></tr><tr><th>Local</th><th>Hora</th><th>Local</th><th>Hora</th><th>Condição</th><th>Modo</th><th>IVA</th><th>Mercadoria</th></tr>');
-        for(var i = 0; data.length; i++){
+        $('table#documentos thead').append('<tr><th rowspan="2">Tipo Documento</th><th colspan="2">Carga</th><th colspan="2">Descarga</th><th colspan="2">Pagamento</th><th rowspan="2">Data Vencimento</th><th colspan="2">Total</th></tr><tr><th>Local</th><th>Hora</th><th>Local</th><th>Hora</th><th>Condição</th><th>Modo</th><th>IVA</th><th>Mercadoria</th></tr>');
+        for(var i = 0; i < data.length; i++){
             if(cliente == data[i]["Entidade"])
                 $('table#documentos tbody').append('<tr><td>'+data[i]['TipoDoc']+'</td><td>'
                     +data[i]['LocalCarga']+'</td><td>'
