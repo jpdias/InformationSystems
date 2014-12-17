@@ -1,10 +1,19 @@
 <div class="col-lg-12">
     <h1 class="page-header"><a onclick="AnaliseDebitoIndex()" style="cursor:pointer;">Analise de Divida</a><span id="graph_title" style="font-size: 23px;float: right;"></span></h1>
 </div>
-<div class="panel-body">
-    <div class="table-responsive" style="width: 50%;margin-top: 80px;height: 500px;">
-    	<div id="graph" class="ct-chart ct-golden-section"></div>
+<div class="row">
+    <div class="col-lg-7" style="margin-top: 80px;">
+            <div class="table-responsive">
+               <div id="graph" class="ct-chart ct-golden-section"></div>
+           </div>
+   </div>
+   <div class="col-lg-5" style="margin-top: 175px;">
+    <div class="panel-body">
+        <div id="pencent-divida">
+        </div>
     </div>
+    <!-- /.panel-body -->
+</div>
 </div>
 <div class="panel-body">
     <div class="table-responsive">
@@ -16,9 +25,10 @@
     </div>
 </div>
 
+
 <style type="text/css">
-	tspan{
-		cursor: pointer;
-	}
+tspan{
+  cursor: pointer;
+}
 </style>
 
