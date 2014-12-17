@@ -31,6 +31,10 @@
 
     <link href="../../assets/stylesheets/chartist.min.css" rel="stylesheet">
 
+    <style type="text/css">a{cursor: pointer;}</style>
+
+    <link rel="shortcut icon" href="../../assets/winecorp.ico">
+
 </head>
 
 <body>
@@ -56,32 +60,32 @@
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                         <li>
-                            <a href="#" onclick="DashboardIndex()"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                            <a onclick="DashboardIndex()"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-sitemap fa-fw"></i> Analise Empresarial<span class="fa arrow"></span></a>
+                            <a><i class="fa fa-sitemap fa-fw"></i> Analise Empresarial<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Armazens<span class="fa arrow"></span></a>
+                                    <a><i class="fa fa-bar-chart-o fa-fw"></i> Armazens<span class="fa arrow"></span></a>
                                     <ul class="nav nav-second-level">
                                         <li>
-                                            <a href="#" onclick="ArmazensIndex()">Listagem</a>
+                                            <a onclick="ArmazensIndex()">Listagem</a>
                                         </li>
                                     </ul>
                                 </li>
                                 <li>
-                                    <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Artigos<span class="fa arrow"></span></a>
+                                    <a><i class="fa fa-bar-chart-o fa-fw"></i> Artigos<span class="fa arrow"></span></a>
                                     <ul class="nav nav-second-level">
                                         <li>
-                                            <a href="#" onclick="ArtigosIndex()">Listagem</a>
+                                            <a  onclick="ArtigosIndex()">Listagem</a>
                                         </li>
                                     </ul>
                                 </li>
                                 <li>
-                                    <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Clientes<span class="fa arrow"></span></a>
+                                    <a><i class="fa fa-bar-chart-o fa-fw"></i> Clientes<span class="fa arrow"></span></a>
                                     <ul class="nav nav-second-level">
                                         <li>
-                                            <a href="#" onclick="ClientesIndex()">Listagem</a>
+                                            <a onclick="ClientesIndex()">Listagem</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -89,13 +93,13 @@
                             <!-- /.nav-second-level -->
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Analise divida<span class="fa arrow"></span></a>
+                            <a><i class="fa fa-bar-chart-o fa-fw"></i> Analise divida<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="#" onclick="AnaliseDebitoIndex()">Fornecedor/Cliente</a>
+                                    <a onclick="AnaliseDebitoIndex()">Fornecedor/Cliente</a>
                                 </li>
                                 <li>
-                                    <a href="#">Facturação</a>
+                                    <a>Facturação</a>
                                 </li>
                             </ul>
                         </li>
@@ -118,11 +122,8 @@
     <script src="../../assets/javascripts/plugins/morris/morris.min.js"></script>
     <script src="../../assets/javascripts/plugins/morris/raphael.min.js"></script>
 
-    <script src="../../assets/javascripts/chartist/chartist.js"></script>
-    <script src="../../assets/javascripts/chartist/chartist.min.js"></script>
-
     <script src="../../assets/javascripts/index.js"></script>
-    <script src="../../assets/javascripts/controller/application.js"></script>
+    <script src="../../assets/javascripts/controller/../../lication.js"></script>
     <script src="../../assets/javascripts/controller/documentos_controller.js"></script>
     <script src="../../assets/javascripts/controller/clientes_controller.js"></script>
     <script src="../../assets/javascripts/controller/artigo_armazens_controller.js"></script>
