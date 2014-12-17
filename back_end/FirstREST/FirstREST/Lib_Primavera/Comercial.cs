@@ -485,7 +485,7 @@ namespace FirstREST.Lib_Primavera
 
             if (PriEngine.InitializeCompany(_credential_comercial, _credential_user, _credential_password) == true)
             {
-                for (int ano = 0; ano < 8; ano++)
+                for (int ano = 0; ano < 5; ano++)
                 {
                     debitoClientesAcumulado = 0;
                     debitoFornecedoresAcumulado = 0;
@@ -510,9 +510,9 @@ namespace FirstREST.Lib_Primavera
                             temp_mes.pendentesFornecedores = new List<Model.Documento>();
                             //for clientes
                             if (mes != 12)
-                                objList = PriEngine.Engine.Consulta("SELECT * FROM CabecDoc WHERE DataVencimento >= '" + (2010 + ano) + "-" + mes + "-1' AND DataVencimento < '" + (2010 + ano) + "-" + (mes + 1) + "-1' ORDER BY DataVencimento");
+                                objList = PriEngine.Engine.Consulta("SELECT * FROM CabecDoc WHERE DataVencimento >= '" + (2012 + ano) + "-" + mes + "-1' AND DataVencimento < '" + (2012 + ano) + "-" + (mes + 1) + "-1' ORDER BY DataVencimento");
                             else
-                                objList = PriEngine.Engine.Consulta("SELECT * FROM CabecDoc WHERE DataVencimento >= '" + (2010 + ano) + "-" + mes + "-1' AND DataVencimento < '" + (2010 + ano + 1) + "-" + 1 + "-1' ORDER BY DataVencimento");
+                                objList = PriEngine.Engine.Consulta("SELECT * FROM CabecDoc WHERE DataVencimento >= '" + (2012 + ano) + "-" + mes + "-1' AND DataVencimento < '" + (2012 + ano + 1) + "-" + 1 + "-1' ORDER BY DataVencimento");
 
                             while (!objList.NoFim())
                             {
@@ -544,9 +544,9 @@ namespace FirstREST.Lib_Primavera
 
                             //for fornecedores
                             if (mes != 12)
-                                objList = PriEngine.Engine.Consulta("SELECT * FROM CabecCompras WHERE DataVencimento >= '" + (2010 + ano) + "-" + mes + "-1' AND DataVencimento < '" + (2010 + ano) + "-" + (mes + 1) + "-1' AND TipoDoc = 'VFA' ORDER BY DataVencimento");
+                                objList = PriEngine.Engine.Consulta("SELECT * FROM CabecCompras WHERE DataVencimento >= '" + (2012 + ano) + "-" + mes + "-1' AND DataVencimento < '" + (2012 + ano) + "-" + (mes + 1) + "-1' AND TipoDoc = 'VFA' ORDER BY DataVencimento");
                             else
-                                objList = PriEngine.Engine.Consulta("SELECT * FROM CabecCompras WHERE DataVencimento >= '" + (2010 + ano) + "-" + mes + "-1' AND DataVencimento < '" + (2010 + ano + 1) + "-" + 1 + "-1' AND TipoDoc = 'VFA' ORDER BY DataVencimento");
+                                objList = PriEngine.Engine.Consulta("SELECT * FROM CabecCompras WHERE DataVencimento >= '" + (2012 + ano) + "-" + mes + "-1' AND DataVencimento < '" + (2012 + ano + 1) + "-" + 1 + "-1' AND TipoDoc = 'VFA' ORDER BY DataVencimento");
                             while (!objList.NoFim())
                             {
                                 objListTipoDoc = PriEngine.Engine.Consulta("Select descricao from V_TIPOS_DOCUMENTO where documento = '" + objList.Valor("TipoDoc") + "'");
@@ -592,7 +592,7 @@ namespace FirstREST.Lib_Primavera
                         listPendentesAnual.trimestres.Add(listPendentesTrimestral);
                     }
 
-                    listPendentesAnual.Ano = (2010 + ano);
+                    listPendentesAnual.Ano = (2012 + ano);
                     listPendentesAnual.DebitoClientes = debitoClientesAcumulado;
                     listPendentesAnual.DebitoFornecedores = debitoFornecedoresAcumulado;
                     analiseDebito.pendentes.Add(listPendentesAnual);
