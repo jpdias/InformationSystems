@@ -12,7 +12,7 @@ function ClientesIndex(){
     }).done(function(data){  
    
         $('table#clientes thead').append('<tr><th>Cliente</th><th>Nome</th><th>Nome Fiscal</th><th>Nº Contribuinte</th><th>Pais</th><th>Debito Total</th></tr>');
-        for(var i = 0; data.length; i++){
+        for(var i = 0; i < data.length; i++){
             $('table#clientes tbody').append('<tr><td><a onclick="ClientesShow(\''+data[i]["cod"]+'\')" style="cursor: pointer;">'+data[i]["cod"]+'</a></td><td>'
                 +data[i]['Nome']+'</td><td>'
                 +data[i]['NomeFiscal']+'</td><td>'
