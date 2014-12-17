@@ -44,34 +44,4 @@
 		</div>
 	</div>
 
-	<div style="width:30%; float:right">
-		<div class="panel-body">
-			<div id="hero-donut">
-				<script type="text/javascript">
-					Morris.Donut({
-        				element: 'hero-donut',
-        					data: [
-            					{label: 'Débito', value: 27 },
-            					{label: 'Facturas Pendentes', value: 23 },
-            					{label: 'Mercadoria Pendentes', value: 24 },
-            					{label: 'Documentos', value: 26 }
-        					],
-        				formatter: function (y) { 
-        					if(y === 27)
-        						return '4956.9€';
-        					else if(y === 23)
-        						return '2';
-        					else if(y === 24)
-        						return '2';
-        					else if(y === 26)
-        						return '5';
-        					else
-        						return '';
-        				},
-        				resize: true
-    				});
-				</script>
-			</div>
-		</div>
-		<!-- /.panel-body -->
-	</div>
+	
