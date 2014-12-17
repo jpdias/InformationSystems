@@ -56,46 +56,46 @@
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                         <li>
-                            <a href="#"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                            <a href="#" onclick="DashboardIndex()"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Armazens<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-sitemap fa-fw"></i> Analise Empresarial<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="#" onclick="ArmazensIndex()">Listagem</a>
+                                    <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Armazens<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-second-level">
+                                        <li>
+                                            <a href="#" onclick="ArmazensIndex()">Listagem</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Artigos<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-second-level">
+                                        <li>
+                                            <a href="#" onclick="ArtigosIndex()">Listagem</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Clientes<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-second-level">
+                                        <li>
+                                            <a href="#" onclick="ClientesIndex()">Listagem</a>
+                                        </li>
+                                    </ul>
                                 </li>
                             </ul>
+                            <!-- /.nav-second-level -->
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Artigos<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Analise divida<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="#" onclick="ArtigosIndex()">Listagem</a>
+                                    <a href="#" onclick="AnaliseDebitoIndex()">Fornecedor/Cliente</a>
                                 </li>
                                 <li>
-                                    <a href="#">Gestão de Stock</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Clientes<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="#" onclick="ClientesIndex()">Listagem</a>
-                                </li>
-                                <li>
-                                    <a href="#">Dividas</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#" onclick="AnaliseDebitoIndex()"><i class="fa fa-bar-chart-o fa-fw"></i> Analise débito<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="#">Clientes</a>
-                                </li>
-                                <li>
-                                    <a href="#">Fornecedores</a>
+                                    <a href="#">Facturação</a>
                                 </li>
                             </ul>
                         </li>
@@ -129,6 +129,7 @@
     <script src="../../assets/javascripts/controller/artigos_controller.js"></script>    
     <script src="../../assets/javascripts/controller/armazens_controller.js"></script>
     <script src="../../assets/javascripts/controller/analise_debito_controller.js"></script>
+    <script src="../../assets/javascripts/controller/dashboard_controller.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="../../assets/javascripts/bootstrap.min.js"></script>
