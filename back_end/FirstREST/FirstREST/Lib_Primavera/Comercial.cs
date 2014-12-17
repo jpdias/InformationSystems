@@ -464,9 +464,11 @@ namespace FirstREST.Lib_Primavera
         public static Model.AnaliseDebito ListaAnaliseDebito()
         {
             StdBELista objList;
+            StdBELista objListTipoDoc;
+            StdBELista objListCondPag;
 
             //fatura
-            Model.FaturaPendente pendente = new Model.FaturaPendente();
+            Model.Documento pendente = new Model.Documento();
             //analise debito
             Model.AnaliseDebito analiseDebito = new Model.AnaliseDebito();
             analiseDebito.pendentes = new List<Model.PendentesAnuais>();
@@ -476,6 +478,8 @@ namespace FirstREST.Lib_Primavera
 
             //conjunto de 3 meses
             Model.PendentesTrimestrais listPendentesTrimestral = new Model.PendentesTrimestrais();
+
+            Model.PendentesMensais temp_mes = new Model.PendentesMensais();
 
             int debitoClientes, debitoFornecedores,debitoClientesAcumulado, debitoFornecedoresAcumulado;
 
@@ -487,59 +491,101 @@ namespace FirstREST.Lib_Primavera
                     debitoFornecedoresAcumulado = 0;
 
                     listPendentesAnual.trimestres = new List<Model.PendentesTrimestrais>();
-                    for (int trimestre = 1; trimestre < 12; trimestre+=3)
+
+                    for (int trimestre = 1; trimestre < 12; trimestre += 3)
                     {
                         /***Re-inicializar variaveis***/
                         debitoClientes = 0;
                         debitoFornecedores = 0;
 
                         listPendentesTrimestral = new Model.PendentesTrimestrais();
-                        listPendentesTrimestral.pendentesClientes = new List<Model.FaturaPendente>();
-                        listPendentesTrimestral.pendentesFornecedores = new List<Model.FaturaPendente>();
+                        listPendentesTrimestral.pendentesMensais = new List<Model.PendentesMensais>();
 
                         //////////////////////////////////////////////////////////////////////////////////
 
-
-
-                        //for clientes
-                        objList = PriEngine.Engine.Consulta("SELECT DataVencimento, Totalmerc, TotalIVA FROM CabecDoc WHERE DataVencimento >= '" + (2010 + ano) + "-" + trimestre + "-1' AND DataVencimento <= '" + (2010 + ano) + "-" + (trimestre + 2) + "-30' ORDER BY DataVencimento");
-
-                        while (!objList.NoFim())
+                        for (int mes = trimestre, dcm = 0, dfm = 0, dcma = 0, dfma = 0; mes < trimestre + 3; mes++, dcm = 0, dfm = 0)
                         {
+                            temp_mes = new Model.PendentesMensais();
+                            temp_mes.pendentesClientes = new List<Model.Documento>();
+                            temp_mes.pendentesFornecedores = new List<Model.Documento>();
+                            //for clientes
+                            if (mes != 12)
+                                objList = PriEngine.Engine.Consulta("SELECT * FROM CabecDoc WHERE DataVencimento >= '" + (2010 + ano) + "-" + mes + "-1' AND DataVencimento < '" + (2010 + ano) + "-" + (mes + 1) + "-1' ORDER BY DataVencimento");
+                            else
+                                objList = PriEngine.Engine.Consulta("SELECT * FROM CabecDoc WHERE DataVencimento >= '" + (2010 + ano) + "-" + mes + "-1' AND DataVencimento < '" + (2010 + ano + 1) + "-" + 1 + "-1' ORDER BY DataVencimento");
 
-                            pendente = new Model.FaturaPendente();
-                            pendente.DataVencimento = objList.Valor("DataVencimento");
-                            pendente.TotalMerc = objList.Valor("TotalMerc");
-                            pendente.TotalMerc = objList.Valor("TotalIVA");
+                            while (!objList.NoFim())
+                            {
+                                objListTipoDoc = PriEngine.Engine.Consulta("Select descricao from V_TIPOS_DOCUMENTO where documento = '" + objList.Valor("TipoDoc")+"'");
+                                objListCondPag = PriEngine.Engine.Consulta("Select descricao from CondPag where condPag = '" + objList.Valor("CondPag") + "'");
 
-                            debitoClientesAcumulado += objList.Valor("TotalMerc") + objList.Valor("TotalIVA");
-                            debitoClientes += objList.Valor("TotalMerc") + objList.Valor("TotalIVA");
+                                pendente = new Model.Documento();
+                                pendente.Entidade = objList.Valor("Entidade");
+                                pendente.TipoDoc = objListTipoDoc.Valor("descricao");
+                                pendente.CondPag = objListCondPag.Valor("descricao");
+                                pendente.NumDoc = objList.Valor("NumDoc");
+                                pendente.TotalMerc = objList.Valor("TotalMerc");
+                                pendente.TotalIVA = objList.Valor("TotalIVA");
+                                pendente.ModoPag = objList.Valor("ModoPag");
+                                pendente.DataVencimento = objList.Valor("DataVencimento");
+                                pendente.LocalCarga = objList.Valor("LocalCarga");
+                                pendente.HoraCarga = objList.Valor("HoraCarga");
+                                pendente.LocalDescarga = objList.Valor("LocalDescarga");
+                                pendente.HoraDescarga = objList.Valor("HoraDescarga");
 
-                            listPendentesTrimestral.pendentesClientes.Add(pendente);
-                            objList.Seguinte();
+                                debitoClientesAcumulado += objList.Valor("TotalMerc") + objList.Valor("TotalIVA");
+                                debitoClientes += objList.Valor("TotalMerc") + objList.Valor("TotalIVA");
+                                dcm += objList.Valor("TotalMerc") + objList.Valor("TotalIVA");
+                                dcma += objList.Valor("TotalMerc") + objList.Valor("TotalIVA");
+
+                                temp_mes.pendentesClientes.Add(pendente);
+                                objList.Seguinte();
+                            }
+
+                            //for fornecedores
+                            if (mes != 12)
+                                objList = PriEngine.Engine.Consulta("SELECT * FROM CabecCompras WHERE DataVencimento >= '" + (2010 + ano) + "-" + mes + "-1' AND DataVencimento < '" + (2010 + ano) + "-" + (mes + 1) + "-1' AND TipoDoc = 'VFA' ORDER BY DataVencimento");
+                            else
+                                objList = PriEngine.Engine.Consulta("SELECT * FROM CabecCompras WHERE DataVencimento >= '" + (2010 + ano) + "-" + mes + "-1' AND DataVencimento < '" + (2010 + ano + 1) + "-" + 1 + "-1' AND TipoDoc = 'VFA' ORDER BY DataVencimento");
+                            while (!objList.NoFim())
+                            {
+                                objListTipoDoc = PriEngine.Engine.Consulta("Select descricao from V_TIPOS_DOCUMENTO where documento = '" + objList.Valor("TipoDoc") + "'");
+                                objListCondPag = PriEngine.Engine.Consulta("Select descricao from CondPag where condPag = '" + objList.Valor("CondPag") + "'");
+
+                                pendente = new Model.Documento();
+                                pendente.Entidade = objList.Valor("Entidade");
+                                pendente.TipoDoc = objListTipoDoc.Valor("descricao");
+                                pendente.CondPag = objListCondPag.Valor("descricao");
+                                pendente.NumDoc = objList.Valor("NumDoc");
+                                pendente.TotalMerc = objList.Valor("TotalMerc");
+                                pendente.TotalIVA = objList.Valor("TotalIVA");
+                                pendente.ModoPag = objList.Valor("ModoPag");
+                                pendente.DataVencimento = objList.Valor("DataVencimento");
+                                pendente.LocalCarga = objList.Valor("LocalCarga");
+                                pendente.HoraCarga = objList.Valor("HoraCarga");
+                                pendente.LocalDescarga = objList.Valor("LocalDescarga");
+                                pendente.HoraDescarga = objList.Valor("HoraDescarga");
+
+                                debitoFornecedoresAcumulado += objList.Valor("TotalMerc") + objList.Valor("TotalIVA");
+                                debitoFornecedores += objList.Valor("TotalMerc") + objList.Valor("TotalIVA");
+                                dfm += objList.Valor("TotalMerc") + objList.Valor("TotalIVA");
+                                dfma += objList.Valor("TotalMerc") + objList.Valor("TotalIVA");
+
+                                temp_mes.pendentesFornecedores.Add(pendente);
+                                objList.Seguinte();
+                            }
+
+                            temp_mes.Mes = mes;
+                            temp_mes.DebitoClientes = dcm;
+                            temp_mes.DebitoFornecedores = dfm;
+                            temp_mes.DebitoClientesAcumulado = dcma;
+                            temp_mes.DebitoFornecedoresAcumulado = dfma;
+
+                            listPendentesTrimestral.pendentesMensais.Add(temp_mes);
                         }
 
                         listPendentesTrimestral.DebitoClientesAcumulado = debitoClientesAcumulado;
                         listPendentesTrimestral.DebitoClientes = debitoClientes;
-
-                        //for fornecedores
-                        objList = PriEngine.Engine.Consulta("SELECT DataVencimento, Totalmerc, TotalIVA FROM CabecCompras WHERE DataVencimento >= '" + (2010 + ano) + "-" + trimestre + "-1' AND DataVencimento <= '" + (2010 + ano) + "-" + (trimestre + 2) + "-30' AND TipoDoc = 'VFA' ORDER BY DataVencimento");
-
-                        while (!objList.NoFim())
-                        {
-
-                            pendente = new Model.FaturaPendente();
-                            pendente.DataVencimento = objList.Valor("DataVencimento");
-                            pendente.TotalMerc = objList.Valor("TotalMerc");
-                            pendente.TotalMerc = objList.Valor("TotalIVA");
-
-                            debitoFornecedoresAcumulado += objList.Valor("TotalMerc") + objList.Valor("TotalIVA");
-                            debitoFornecedores += objList.Valor("TotalMerc") + objList.Valor("TotalIVA");
-
-                            listPendentesTrimestral.pendentesFornecedores.Add(pendente);
-                            objList.Seguinte();
-                        }
-
                         listPendentesTrimestral.DebitoFornecedoresAcumulado = debitoFornecedoresAcumulado;
                         listPendentesTrimestral.DebitoFornecedores = debitoFornecedores;
 

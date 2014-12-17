@@ -32,12 +32,12 @@ namespace FirstREST.Lib_Primavera.Model
             get;
             set;
         }
-        public List<Model.FaturaPendente> pendentesClientes
+        public List<Model.Documento> pendentesClientes
         {
             get;
             set;
         }
-        public List<Model.FaturaPendente> pendentesFornecedores
+        public List<Model.Documento> pendentesFornecedores
         {
             get;
             set;

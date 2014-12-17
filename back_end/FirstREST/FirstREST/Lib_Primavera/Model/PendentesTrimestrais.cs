@@ -27,12 +27,7 @@ namespace FirstREST.Lib_Primavera.Model
             get;
             set;
         }
-        public List<Model.FaturaPendente> pendentesClientes
-        {
-            get;
-            set;
-        }
-        public List<Model.FaturaPendente> pendentesFornecedores
+        public List<Model.PendentesMensais> pendentesMensais
         {
             get;
             set;
